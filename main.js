@@ -8,7 +8,7 @@ var multer = require("multer");
 const env = require("dotenv");
 env.config();
 
-const apiKey = process.env.API_KEY
+const API_KEY = process.env.API_KEY
 
 //getter setter 문제 해결 필요
 class PayInfo {
@@ -155,7 +155,7 @@ function requestWithFile (filename) {
       formData,
       {
         headers: {
-          'X-OCR-SECRET': apiKey, // Secret Key 
+          'X-OCR-SECRET': API_KEY, // Secret Key 
           ...formData.getHeaders()
         }
       }
