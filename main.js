@@ -47,8 +47,6 @@ class PayInfo {
   }
 }
 
-//_______________________________________________________________________________
-// app.use(express.static(path.join(__dirname, '/')));
 
 // 백 연동시 이 부분 수정 
 const storage = multer.diskStorage({
@@ -85,6 +83,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
           price,
           date,
           address,
+          itemName,
+          itemCount,
+          itemPrice
         });
       },8000);
   } catch (error) {
@@ -132,16 +133,39 @@ function requestWithFile (filename) {
       if (res.status === 200) {
         // console.log('requestWithFile response:', res.data)
         const obj = Object.values(Object.values(Object.values(Object.values(Object.values(res.data)[3]))[0])[0])[1]
-        payInfo.name = obj.storeInfo.name.text + ' ' + obj.storeInfo.subName.text
-        payInfo.date = obj.paymentInfo.date.text
+        if(obj.storeInfo.name != null) {
+          payInfo.name = obj.storeInfo.name.text
+          if(obj.storeInfo.subName != null) {
+            payInfo.name += ' ' + obj.storeInfo.subName.text
+          }
+        } else {
+          payInfo.name = ' '
+        }
+        if(obj.paymentInfo.date != null) {
+          payInfo.date = obj.paymentInfo.date.text
+        }
+        if(obj.totalPrice.price != null) {
+          payInfo.price = obj.totalPrice.price.text
+        }
+        try {
+          payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
+        } catch(e) {
 
-        payInfo.price = obj.totalPrice.price.text
-        payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
-        console.log("success")
-        // payInfo.address
+        }
+          console.log("success")
+          var array = (Object.values(obj)[2])[0].items
+          array.forEach(element => {
+            itemName.push(element.name.text);
+            itemCount.push(element.count.text);
+            itemPrice.push(element.price.price.text);
+          });
       }
     })
     .catch(e => {
       console.warn('requestWithFile error', e.response)
     })
 }
+
+var itemName = [];
+var itemPrice = [];
+var itemCount = [];
