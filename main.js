@@ -152,8 +152,12 @@ function requestWithFile (filename) {
           array.forEach(element => {
             try {
               itemName.push(element.name.text); 
-            itemCount.push(element.count.text); 
-            itemPrice.push(element.price.price.text);} catch (e) { 
+              itemCount.push(element.count.text); 
+              itemPrice.push(element.price.price.text);
+              } catch (e) { 
+                itemName.push(""); 
+                itemCount.push(""); 
+                itemPrice.push("");
             }
             console.log("success")
           });
