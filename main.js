@@ -72,8 +72,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
     // 클라이언트에게 응답 보내기
 
   // console.log("filename " , typeof(filename))
-    requestWithFile(filename)
-    setTimeout(() => {
+    requestWithFile(filename).then (() => {
       const address = payInfo.address;
       const price = payInfo.price;
       const date = payInfo.date;
@@ -87,7 +86,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
           itemCount,
           itemPrice
         });
-      },8000);
+    })
   } catch (error) {
     console.error(error);
     res.status(500).json({ title: "Error", message: "Something went wrong!" });
