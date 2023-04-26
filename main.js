@@ -87,7 +87,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
           itemCount,
           itemPrice,
         });
-      }, 5000);
+      }, 9000);
   } catch (error) {
     console.error(error);
     res.status(500).json({ title: "Error", message: "Something went wrong!" });
@@ -162,6 +162,7 @@ function requestWithFile (filename) {
                 itemPrice.push(element.price.price.text);
               }
           });
+          console.log("success")
       }
     })
     .catch(e => {
