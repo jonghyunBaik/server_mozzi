@@ -150,13 +150,15 @@ function requestWithFile (filename) {
         } 
           var array = (Object.values(obj)[2])[0].items
           array.forEach(element => {
-              itemName.push(element.name.text); 
-              itemCount.push(element.count.text); 
-              itemPrice.push(element.price.price.text);
-              
-                itemName.push(""); 
-                itemCount.push(""); 
-                itemPrice.push("");
+              if('name' in element) {
+              itemName.push(element.name.text);
+              } 
+              if('count' in element) {
+                itemCount.push(element.count.text); 
+              } 
+              if('price' in element) {
+                itemPrice.push(element.price.price.text);
+              }
           });
       }
     })
@@ -165,6 +167,6 @@ function requestWithFile (filename) {
     })
 }
 
-var itemName = {};
-var itemPrice = {};
-var itemCount = {};
+var itemName = [];
+var itemPrice = [];
+var itemCount = [];
