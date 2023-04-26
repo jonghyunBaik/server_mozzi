@@ -73,6 +73,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
 
   // console.log("filename " , typeof(filename))
     requestWithFile(filename).then (() => {
+    setTimeout(() => {
       const address = payInfo.address;
       const price = payInfo.price;
       const date = payInfo.date;
@@ -86,6 +87,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
           itemCount,
           itemPrice
         });
+      },8000);
     })
   } catch (error) {
     console.error(error);
