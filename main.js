@@ -85,9 +85,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
           address,
           itemName,
           itemCount,
-          itemPrice
+          itemPrice,
         });
-      }, 3000);
+      }, 5000);
   } catch (error) {
     console.error(error);
     res.status(500).json({ title: "Error", message: "Something went wrong!" });
@@ -140,8 +140,10 @@ function requestWithFile (filename) {
           }
         }
         if('paymentInfo' in obj) {
-          payInfo.date = obj.paymentInfo.date.text + " " +obj.paymentInfo.time.text + ' +0000'
+          payInfo.date = formatDate(obj.paymentInfo.date.text)
         }
+
+        console.log(payInfo.date)
         if('totalPrice' in obj) {
           payInfo.price = obj.totalPrice.price.text
         }
@@ -170,3 +172,14 @@ function requestWithFile (filename) {
 var itemName = [];
 var itemPrice = [];
 var itemCount = [];
+
+function formatDate(input) {
+  if(input.length == 8) {
+    const year = input.substring(0, 4);
+    const month = input.substring(4, 6);
+    const day = input.substring(6, 8);
+    return `${year}-${month}-${day}`;
+  } else {
+    return input
+  }
+}
