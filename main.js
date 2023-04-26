@@ -78,6 +78,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
       const price = payInfo.price;
       const date = payInfo.date;
       const name = payInfo.name;
+      conosole.log(itemName)
       res.json({
           name,
           price,
