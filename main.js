@@ -140,7 +140,7 @@ function requestWithFile (filename) {
           }
         }
         if('paymentInfo' in obj) {
-          payInfo.date = obj.paymentInfo.date.text + " " +obj.payInfo.time.text
+          payInfo.date = obj.paymentInfo.date.text + " " +obj.paymentInfo.time.text + ' +0000'
         }
         if('totalPrice' in obj) {
           payInfo.price = obj.totalPrice.price.text
