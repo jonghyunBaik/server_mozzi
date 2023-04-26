@@ -81,13 +81,21 @@ app.post("/upload", upload.single("image"), (req, res) => {
       const price = payInfo.price;
       const date = payInfo.date;
       const name = payInfo.name;
-      let itemName = []
-      itemName = payInfo._itemName;
-      let itemCount = []
-      itemCount = payInfo._itemCount;
-      let itemPrice = []
-      itemPrice = payInfo._itemPrice;
-      console.log(payInfo._itemName);
+      const itemName = []
+      itemName = []
+      payInfo._itemName.forEach(element => {
+        itemName.push(element)
+      });
+      const itemCount = []
+      itemCount = []
+      payInfo._itemCount.forEach(element => {
+        itemCount.push(element)
+      });
+      const itemPrice = []
+      itemPrice = []
+      payInfo._itemPrice.forEach(element => {
+        itemPrice.push(element)
+      });
       res.json({
           name,
           price,
@@ -161,6 +169,11 @@ function requestWithFile (filename) {
           payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
         } 
           var array = (Object.values(obj)[2])[0].items
+
+          payInfo._itemName = []
+          payInfo._itemCount = []
+          payInfo._itemPrice = []
+          
           array.forEach(element => {
               if('name' in element) {
                 console.log(payInfo._itemName)
