@@ -12,11 +12,14 @@ const API_KEY = process.env.API_KEY
 
 //getter setter 문제 해결 필요
 class PayInfo {
-  constructor(address, price, date, name) {
+  constructor(address, price, date, name, itemName, itemCount, itemPrice) {
     this._address = address;
     this._price = price;
     this._date = date;
     this._name = name;
+    this._itemName = itemName;
+    this._itemCount = itemCount;
+    this._itemPrice = itemPrice;
   }
 
   get date() {
@@ -78,7 +81,13 @@ app.post("/upload", upload.single("image"), (req, res) => {
       const price = payInfo.price;
       const date = payInfo.date;
       const name = payInfo.name;
-      console.log(itemName)
+      let itemName = []
+      itemName = payInfo._itemName;
+      let itemCount = []
+      itemCount = payInfo._itemCount;
+      let itemPrice = []
+      itemPrice = payInfo._itemPrice;
+      console.log(payInfo._itemName);
       res.json({
           name,
           price,
@@ -97,7 +106,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
 
 app.listen(8080, () => console.log('Server running'));
 
-const payInfo = new PayInfo("","","","");
+const payInfo = new PayInfo("","","","",[],[],[]);
 
 function requestWithFile (filename) {
   const file = fs.createReadStream(`uploads/${filename}`) // image file object. Example: fs.createReadStream('./example.png')
@@ -154,13 +163,19 @@ function requestWithFile (filename) {
           var array = (Object.values(obj)[2])[0].items
           array.forEach(element => {
               if('name' in element) {
-              itemName.push(element.name.text);
+                console.log(payInfo._itemName)
+                payInfo._itemName.push(element.name.text);
+                console.log(payInfo._itemName)
               } 
               if('count' in element) {
-                itemCount.push(element.count.text); 
+                console.log(payInfo._itemCount)
+                payInfo._itemCount.push(element.count.text); 
+                console.log(payInfo._itemCount)
               } 
               if('price' in element) {
-                itemPrice.push(element.price.price.text);
+                console.log(payInfo._itemPrice)
+                payInfo._itemPrice.push(element.price.price.text);
+                console.log(payInfo._itemPrice)
               }
           });
           console.log("success")
@@ -171,9 +186,6 @@ function requestWithFile (filename) {
     })
 }
 
-var itemName = [];
-var itemPrice = [];
-var itemCount = [];
 
 function formatDate(input) {
   if(input.length == 8) {
