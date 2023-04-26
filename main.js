@@ -120,7 +120,7 @@ function requestWithFile (filename) {
 
   axios
     .post(
-      'https://p9kjr20suo.apigw.ntruss.com/custom/v1/22095/3eeeb774736d9ff549ce7578632cc717d37ed5347c07dd8cf691d03796235ecd/document/receipt', // APIGW Invoke URL
+      'https://p9kjr20suo.apigw.ntruss.com/custom/v1/22151/e5083a02be86c91dde220ab7e31b9dd202caa507bc1ac0e56a1c499c7a3d9dc3/document/receipt', // APIGW Invoke URL
       formData,
       {
         headers: {
@@ -133,31 +133,29 @@ function requestWithFile (filename) {
       if (res.status === 200) {
         // console.log('requestWithFile response:', res.data)
         const obj = Object.values(Object.values(Object.values(Object.values(Object.values(res.data)[3]))[0])[0])[1]
-        if(obj.storeInfo.name != null) {
+        if('storeInfo' in obj) {
           payInfo.name = obj.storeInfo.name.text
-          if(obj.storeInfo.subName != null) {
+          if('subName' in obj.storeInfo) {
             payInfo.name += ' ' + obj.storeInfo.subName.text
           }
-        } else {
-          payInfo.name = ' '
         }
-        if(obj.paymentInfo.date != null) {
+        if('paymentInfo' in obj) {
           payInfo.date = obj.paymentInfo.date.text
         }
-        if(obj.totalPrice.price != null) {
+        if('totalPrice' in obj) {
           payInfo.price = obj.totalPrice.price.text
         }
-        try {
+        if('addresses' in obj.storeInfo) {
           payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
-        } catch(e) {
-
-        }
-          console.log("success")
+        } 
           var array = (Object.values(obj)[2])[0].items
           array.forEach(element => {
-            itemName.push(element.name.text);
-            itemCount.push(element.count.text);
-            itemPrice.push(element.price.price.text);
+            try {
+              itemName.push(element.name.text); 
+            itemCount.push(element.count.text); 
+            itemPrice.push(element.price.price.text);} catch (e) { 
+            }
+            console.log("success")
           });
       }
     })
@@ -166,6 +164,6 @@ function requestWithFile (filename) {
     })
 }
 
-var itemName = [];
-var itemPrice = [];
-var itemCount = [];
+var itemName = {};
+var itemPrice = {};
+var itemCount = {};
