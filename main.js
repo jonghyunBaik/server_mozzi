@@ -12,7 +12,7 @@ const API_KEY = process.env.API_KEY
 
 //getter setter 문제 해결 필요
 class PayInfo {
-  constructor(address, price, date, name, itemName, itemCount, itemPrice) {
+  constructor(address, price, date, name, itemName, itemCount, itemPrice, time) {
     this._address = address;
     this._price = price;
     this._date = date;
@@ -20,6 +20,7 @@ class PayInfo {
     this._itemName = itemName;
     this._itemCount = itemCount;
     this._itemPrice = itemPrice;
+    this._time = time;
   }
 
   get date() {
@@ -80,6 +81,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
       const price = payInfo.price;
       const date = payInfo.date;
       const name = payInfo.name;
+      const time = payInfo.time;
       const itemName = []
       payInfo._itemName.forEach(element => {
         itemName.push(element)
@@ -100,6 +102,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
           itemName,
           itemCount,
           itemPrice,
+          time
         });})
   } catch (error) {
     console.error(error);
@@ -109,7 +112,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 
 app.listen(8080, () => console.log('Server running'));
 
-const payInfo = new PayInfo("","","","",[],[],[]);
+const payInfo = new PayInfo("","","","",[],[],[],"");
 
 async function requestWithFile (filename, callback) {
   const file = fs.createReadStream(`uploads/${filename}`) // image file object. Example: fs.createReadStream('./example.png')
@@ -154,6 +157,9 @@ async function requestWithFile (filename, callback) {
         }
         if('paymentInfo' in obj) {
           payInfo.date = formatDate(obj.paymentInfo.date.text)
+          if('time' in obj.paymentInfo) {
+            payInfo.time = formatDate(obj.paymentInfo.time.text)
+          }
         }
 
         console.log(payInfo.date)
