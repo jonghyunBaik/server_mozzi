@@ -82,17 +82,14 @@ app.post("/upload", upload.single("image"), (req, res) => {
       const date = payInfo.date;
       const name = payInfo.name;
       const itemName = []
-      itemName = []
       payInfo._itemName.forEach(element => {
         itemName.push(element)
       });
       const itemCount = []
-      itemCount = []
       payInfo._itemCount.forEach(element => {
         itemCount.push(element)
       });
       const itemPrice = []
-      itemPrice = []
       payInfo._itemPrice.forEach(element => {
         itemPrice.push(element)
       });
