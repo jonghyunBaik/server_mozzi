@@ -68,15 +68,14 @@ app.get('/', (req,res) => {
 })
 
 // 이미지 업로드를 처리하는 라우트
-app.post("/upload", upload.single("image"), (req, res) => {
+app.post("/upload", upload.single("image"), async (req, res) => {
   try {
     // 업로드된 이미지 파일의 경로와 파일명 반환
     const { path, filename } = req.file;
     // 클라이언트에게 응답 보내기
 
   // console.log("filename " , typeof(filename))
-    requestWithFile(filename)
-    setTimeout(() => {
+    await requestWithFile(filename, function() {
       const address = payInfo.address;
       const price = payInfo.price;
       const date = payInfo.date;
@@ -101,8 +100,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
           itemName,
           itemCount,
           itemPrice,
-        });
-      }, 9000);
+        });})
   } catch (error) {
     console.error(error);
     res.status(500).json({ title: "Error", message: "Something went wrong!" });
@@ -113,7 +111,7 @@ app.listen(8080, () => console.log('Server running'));
 
 const payInfo = new PayInfo("","","","",[],[],[]);
 
-function requestWithFile (filename) {
+async function requestWithFile (filename, callback) {
   const file = fs.createReadStream(`uploads/${filename}`) // image file object. Example: fs.createReadStream('./example.png')
   
 
@@ -189,6 +187,7 @@ function requestWithFile (filename) {
               }
           });
           console.log("success")
+          callback()
       }
     })
     .catch(e => {
