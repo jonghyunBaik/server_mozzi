@@ -148,12 +148,16 @@ function requestWithFile (filename) {
         if('addresses' in obj.storeInfo) {
           payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
         } 
-          var array = (Object.values(obj)[2])[0].items
+        try {
+          var array = (Object.values(obj)[2])[0].items} catch (e) {
+            console.log('error')
+          } 
           array.forEach(element => {
             try {
               itemName.push(element.name.text); 
               itemCount.push(element.count.text); 
               itemPrice.push(element.price.price.text);
+              
               } catch (e) { 
                 itemName.push(""); 
                 itemCount.push(""); 
