@@ -203,16 +203,6 @@ async function requestWithFile (filename, callback) {
 
 
 function formatDate(input) {
-  if(input.subName(1,2) = 3) {
-    if(input.substring(2,3) = '-') {
-      return '20' + input;
-    } else if(input.substring(2,3) = '/') {
-      const year = '20' + input.substring(0,2)
-      const month = input.substring(3,5)
-      const day = input.substring(6,8)
-      return `${year}-${month}-${day}`;
-    }
-  }
   if(input.length == 8) {
     const year = input.substring(0, 4);
     const month = input.substring(4, 6);
