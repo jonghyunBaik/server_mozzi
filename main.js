@@ -158,7 +158,7 @@ async function requestWithFile (filename, callback) {
         if('paymentInfo' in obj) {
           payInfo.date = formatDate(obj.paymentInfo.date.text)
           if('time' in obj.paymentInfo) {
-            payInfo.time = formatDate(obj.paymentInfo.time.text)
+            payInfo.time = obj.paymentInfo.time.text
           }
         }
 
