@@ -155,6 +155,7 @@ async function requestWithFile (filename, callback) {
             payInfo.name += ' ' + obj.storeInfo.subName.text
           }
         }
+        
         if('paymentInfo' in obj) {
           payInfo.date = formatDate(obj.paymentInfo.date.text)
           if('time' in obj.paymentInfo) {
@@ -162,7 +163,6 @@ async function requestWithFile (filename, callback) {
           }
         }
 
-        console.log(payInfo.date)
         if('totalPrice' in obj) {
           payInfo.price = obj.totalPrice.price.text
         }
@@ -203,12 +203,14 @@ async function requestWithFile (filename, callback) {
 
 
 function formatDate(input) {
-  if(input.length == 8) {
-    const year = input.substring(0, 4);
-    const month = input.substring(4, 6);
-    const day = input.substring(6, 8);
-    return `${year}-${month}-${day}`;
-  } else {
-    return input
+  const match = input.match(/^(\d{4})[-\/]?(\d{2})[-\/]?(\d{2})$/);
+  if (!match) {
+    throw new Error('Invalid input format');
   }
+  
+  const year = match[1];
+  const month = match[2];
+  const day = match[3];
+  
+  return `${year}-${month}-${day}`;
 }
