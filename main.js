@@ -7,8 +7,92 @@ const app = express();
 var multer = require("multer");
 const env = require("dotenv");
 env.config();
+const admin = require('firebase-admin');
+var firestore = require("firebase-admin/firestore");
+const bodyParser = require('body-parser');
+
+// Initialize Firebase Admin SDK
+const serviceAccount = require('./firebase_key.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://fir-node-60d01-default-rtdb.firebaseio.com"
+});
+
+// Get a reference to the Firestore database
+const db = admin.firestore();
+
+app.use(bodyParser.json());
+
+// Define a route for '/data'
+app.post(`/data`, async (req, res) => {
+  try {
+    // console.log(req.body.id);
+
+    const snapshot = await db.collection('mozzi').doc(req.body.id).collection("pay").get();
+
+    const documents = [];
+
+    snapshot.forEach((doc) => {
+      documents.push(doc.data());
+    });
+
+    res.json(documents);
+  } catch (error) {
+    console.error('Error retrieving documents:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving documents.' });
+  }
+});
+
+
+// app.post('/login', (req, res) => {
+//   // const id = req.body.id;
+//   console.log(req.body);
+
+//   const documents = [];
+
+//   // Implement your login logic here, such as verifying the ID and password
+
+//   // Assuming the login is successful, retrieve data from Firebase
+//   const db = admin.firestore();
+//   const snapshot = db.collection('mozzi').doc(`hippo`).collection("pay").get();
+
+//   snapshot.forEach((doc) => {
+//       documents.push(doc.data());
+//     })
+//     .catch((error) => {
+//       res.status(500).json({ error: 'Error retrieving user data' });
+//     });
+//     res.json(documents);
+// });
+
+
+app.post('/add', async (req, res) => {
+  try {
+    const { text1, text2, text3, text4, text5, text6, text7, text8 } = req.body;
+
+    // Create a new document in the specified collection
+    await db.collection('mozzi').doc('hippo').collection('pay').add({
+      storeName : text1, // 가게 이름
+      address : text2, // 주소
+      price : text3, // 가격 
+      item : text4, // 항목
+      date : text5, // 날짜
+      category : text6, // 카테고리
+      point : text7, // 만족도
+      memo : text8 //메모
+    });
+
+    res.send('Data added successfully');
+  } catch (error) {
+    console.error('Error adding data:', error);
+    res.status(500).send('An error occurred while adding data.');
+  }
+});
 
 const API_KEY = process.env.API_KEY
+
+
 
 //getter setter 문제 해결 필요
 class PayInfo {
@@ -147,53 +231,57 @@ async function requestWithFile (filename, callback) {
     )
     .then(res => {
       if (res.status === 200) {
+
+        console.log(res.data)
+        console.log('______여기 res.data_____________________')
         // console.log('requestWithFile response:', res.data)
-        const obj = Object.values(Object.values(Object.values(Object.values(Object.values(res.data)[3]))[0])[0])[1]
-        if('storeInfo' in obj) {
-          payInfo.name = obj.storeInfo.name.text
-          if('subName' in obj.storeInfo) {
-            payInfo.name += ' ' + obj.storeInfo.subName.text
-          }
-        }
+        // const obj = Object.values(Object.values(Object.values(Object.values(Object.values(res.data)[3]))[0])[0])[1]
+        // if('storeInfo' in obj) {
+        //   payInfo.name = obj.storeInfo.name.text
+        //   if('subName' in obj.storeInfo) {
+        //     payInfo.name += ' ' + obj.storeInfo.subName.text
+        //   }
+        // }
         
-        if('paymentInfo' in obj) {
-          payInfo.date = formatDate(obj.paymentInfo.date.text)
-          if('time' in obj.paymentInfo) {
-            payInfo.time = obj.paymentInfo.time.text
-          }
-        }
+        // if('paymentInfo' in obj) {
+        //   payInfo.date = formatDate(obj.paymentInfo.date.text)
+        //   if('time' in obj.paymentInfo) {
+        //     payInfo.time = obj.paymentInfo.time.text
+        //   }
+        // }
 
-        if('totalPrice' in obj) {
-          payInfo.price = obj.totalPrice.price.text
-        }
-        if('addresses' in obj.storeInfo) {
-          payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
-        } 
-          var array = (Object.values(obj)[2])[0].items
+        // if('totalPrice' in obj) {
+        //   payInfo.price = obj.totalPrice.price.text
+        // }
+        // if('addresses' in obj.storeInfo) {
+        //   payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
+        // } 
+        //   var array = (Object.values(obj)[2])[0].items
 
-          payInfo._itemName = []
-          payInfo._itemCount = []
-          payInfo._itemPrice = []
+        //   payInfo._itemName = []
+        //   payInfo._itemCount = []
+        //   payInfo._itemPrice = []
           
-          array.forEach(element => {
-              if('name' in element) {
-                console.log(payInfo._itemName)
-                payInfo._itemName.push(element.name.text);
-                console.log(payInfo._itemName)
-              } 
-              if('count' in element) {
-                console.log(payInfo._itemCount)
-                payInfo._itemCount.push(element.count.text); 
-                console.log(payInfo._itemCount)
-              } 
-              if('price' in element) {
-                console.log(payInfo._itemPrice)
-                payInfo._itemPrice.push(element.price.price.text);
-                console.log(payInfo._itemPrice)
-              }
-          });
-          console.log("success")
-          callback()
+        //   array.forEach(element => {
+        //       if('name' in element) {
+        //         console.log(payInfo._itemName)
+        //         payInfo._itemName.push(element.name.text);
+        //         console.log(payInfo._itemName)
+        //       } 
+        //       if('count' in element) {
+        //         console.log(payInfo._itemCount)
+        //         payInfo._itemCount.push(element.count.text); 
+        //         console.log(payInfo._itemCount)
+        //       } 
+        //       if('price' in element) {
+        //         console.log(payInfo._itemPrice)
+        //         payInfo._itemPrice.push(element.price.price.text);
+        //         console.log(payInfo._itemPrice)
+        //       }
+        //   });
+        //   console.log("success")
+        //   console.log(payInfo.address + "+" + payInfo.date + "+" + payInfo.name + "+" + payInfo.price + "+" + payInfo._itemCount + "+" + payInfo.item + "+" + payInfo.itemPrice)
+        //   callback()
       }
     })
     .catch(e => {
@@ -214,3 +302,7 @@ function formatDate(input) {
   
   return `${year}-${month}-${day}`;
 }
+
+// requestWithFile('1682569250907-image.jpeg', function() {
+//   console.log('stop')
+// })
