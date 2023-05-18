@@ -300,6 +300,8 @@ app.post("/upload", upload.single("image"), async (req, res) => {
   }}
 );
 
+const dataSet = {}
+
 app.listen(8080, () => console.log('Server running'));
 
 const payInfo = new PayInfo("","","","",[],[],[],"");
@@ -338,8 +340,8 @@ async function requestWithFile (filename, callback) {
     .then(res => {
       if (res.status === 200) {
 
-        console.log('requestWithFile response:', res.data)
-        const obj = Object.values(Object.values(Object.values(Object.values(Object.values(res.data)[3]))[0])[0])[1]
+        console.log('requestWithFile response:', JSON.stringify(res.data, null, 2))
+        const obj = res.data.images[0].receipt.result
         if('storeInfo' in obj) {
           payInfo.name = obj.storeInfo.name.text
           if('subName' in obj.storeInfo) {
@@ -348,9 +350,9 @@ async function requestWithFile (filename, callback) {
         }
         
         if('paymentInfo' in obj) {
-          payInfo.date = formatDate(obj.paymentInfo.date.text)
+          payInfo.date = obj.paymentInfo.date.formatted.year + "-" + obj.paymentInfo.date.formatted.month + "-" + obj.paymentInfo.date.formatted.day
           if('time' in obj.paymentInfo) {
-            payInfo.time = obj.paymentInfo.time.text
+            payInfo.time = obj.paymentInfo.time.formatted.hour + " : " + obj.paymentInfo.time.formatted.minute + " : " + obj.paymentInfo.time.formatted.second
           }
         }
 
@@ -358,34 +360,36 @@ async function requestWithFile (filename, callback) {
           payInfo.price = obj.totalPrice.price.text
         }
         if('addresses' in obj.storeInfo) {
-          payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
+          payInfo.address = obj.storeInfo.addresses[0].text
         } 
-          var array = (Object.values(obj)[2])[0].items
+        
+        payInfo._itemName = []
+        payInfo._itemCount = []
+        payInfo._itemPrice = []
 
-          payInfo._itemName = []
-          payInfo._itemCount = []
-          payInfo._itemPrice = []
+        if('items' in obj.subResults[0]) {
+          const subResults = obj.subResults[0].items
           
-          array.forEach(element => {
-              if('name' in element) {
-                console.log(payInfo._itemName)
-                payInfo._itemName.push(element.name.text);
-                console.log(payInfo._itemName)
-              } 
-              if('count' in element) {
-                console.log(payInfo._itemCount)
-                payInfo._itemCount.push(element.count.text); 
-                console.log(payInfo._itemCount)
-              } 
-              if('price' in element) {
-                console.log(payInfo._itemPrice)
-                payInfo._itemPrice.push(element.price.price.text);
-                console.log(payInfo._itemPrice)
-              }
+          subResults.forEach(element => {
+            if('name' in element) {
+              console.log(payInfo._itemName)
+              payInfo._itemName.push(element.name.text);
+              console.log(payInfo._itemName)
+            } 
+            if('count' in element) {
+              console.log(payInfo._itemCount)
+              payInfo._itemCount.push(element.count.text); 
+              console.log(payInfo._itemCount)
+            } 
+            if('price' in element) {
+              console.log(payInfo._itemPrice)
+              payInfo._itemPrice.push(element.price.price.text);
+              console.log(payInfo._itemPrice)
+            }
           });
-          console.log("success")
-          console.log(payInfo.address + "+" + payInfo.date + "+" + payInfo.name + "+" + payInfo.price + "+" + payInfo._itemCount + "+" + payInfo.item + "+" + payInfo.itemPrice)
-          callback()
+        }
+        console.log("success")
+        callback()
       }
     })
     .catch(e => {
@@ -393,20 +397,3 @@ async function requestWithFile (filename, callback) {
     })
 }
 
-
-function formatDate(input) {
-  const match = input.match(/^(\d{4})[-\/]?(\d{2})[-\/]?(\d{2})$/);
-  if (!match) {
-    throw new Error('Invalid input format');
-  }
-  
-  const year = match[1];
-  const month = match[2];
-  const day = match[3];
-  
-  return `${year}-${month}-${day}`;
-}
-
-// requestWithFile('1682569250907-image.jpeg', function() {
-//   console.log('stop')
-// })
