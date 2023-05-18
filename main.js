@@ -304,7 +304,7 @@ const dataSet = {}
 
 app.listen(8080, () => console.log('Server running'));
 
-const payInfo = new PayInfo("","","","",[],[],[],"");
+const payInfo = new PayInfo(" "," "," "," ",[],[],[]," ");
 
 async function requestWithFile (filename, callback) {
   const file = fs.createReadStream(`uploads/${filename}`) // image file object. Example: fs.createReadStream('./example.png')
@@ -392,16 +392,3 @@ async function requestWithFile (filename, callback) {
       console.warn('requestWithFile error', e.response)
     })
 }
-
-requestWithFile('KakaoTalk_Photo_2023-05-18-20-26-26.jpeg', function() {
-console.log(
-  payInfo.name +
-  payInfo.price +
-  payInfo.date +
-  payInfo.address +
-  payInfo._itemName + 
-  payInfo._itemCount +
-  payInfo._itemPrice +
-  payInfo.time
-  )
-})
