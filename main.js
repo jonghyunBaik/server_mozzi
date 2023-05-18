@@ -340,7 +340,7 @@ async function requestWithFile (filename, callback) {
     .then(res => {
       if (res.status === 200) {
 
-        console.log('requestWithFile response:', JSON.stringify(res.data, null, 2))
+        // console.log('requestWithFile response:', JSON.stringify(res.data, null, 2))
         const obj = res.data.images[0].receipt.result
         if('storeInfo' in obj) {
           payInfo.name = obj.storeInfo.name.text
