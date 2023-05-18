@@ -44,7 +44,7 @@ app.post(`/data`, async (req, res) => {
   }
 });
 
-app.post(`/data1`, async (req, res) => {
+app.get(`/data1`, async (req, res) => {
   try {
 
     const snapshot = await db.collection('mozzi').doc("id1").collection("pay").get();
@@ -63,7 +63,7 @@ app.post(`/data1`, async (req, res) => {
   }
 });
 
-app.post(`/data2`, async (req, res) => {
+app.get(`/data2`, async (req, res) => {
   try {
 
     const snapshot = await db.collection('mozzi').doc("id2").collection("pay").get();
@@ -82,7 +82,7 @@ app.post(`/data2`, async (req, res) => {
   }
 });
 
-app.post(`/data3`, async (req, res) => {
+app.get(`/data3`, async (req, res) => {
   try {
 
     const snapshot = await db.collection('mozzi').doc("id3").collection("pay").get();
@@ -292,7 +292,8 @@ app.post("/upload", upload.single("image"), async (req, res) => {
           itemCount,
           itemPrice,
           time
-        });})
+        });
+      })
   } catch (error) {
     console.error(error);
     res.status(500).json({ title: "Error", message: "Something went wrong!" });
@@ -337,56 +338,54 @@ async function requestWithFile (filename, callback) {
     .then(res => {
       if (res.status === 200) {
 
-        console.log(res.data)
-        console.log('______여기 res.data_____________________')
-        // console.log('requestWithFile response:', res.data)
-        // const obj = Object.values(Object.values(Object.values(Object.values(Object.values(res.data)[3]))[0])[0])[1]
-        // if('storeInfo' in obj) {
-        //   payInfo.name = obj.storeInfo.name.text
-        //   if('subName' in obj.storeInfo) {
-        //     payInfo.name += ' ' + obj.storeInfo.subName.text
-        //   }
-        // }
+        console.log('requestWithFile response:', res.data)
+        const obj = Object.values(Object.values(Object.values(Object.values(Object.values(res.data)[3]))[0])[0])[1]
+        if('storeInfo' in obj) {
+          payInfo.name = obj.storeInfo.name.text
+          if('subName' in obj.storeInfo) {
+            payInfo.name += ' ' + obj.storeInfo.subName.text
+          }
+        }
         
-        // if('paymentInfo' in obj) {
-        //   payInfo.date = formatDate(obj.paymentInfo.date.text)
-        //   if('time' in obj.paymentInfo) {
-        //     payInfo.time = obj.paymentInfo.time.text
-        //   }
-        // }
+        if('paymentInfo' in obj) {
+          payInfo.date = formatDate(obj.paymentInfo.date.text)
+          if('time' in obj.paymentInfo) {
+            payInfo.time = obj.paymentInfo.time.text
+          }
+        }
 
-        // if('totalPrice' in obj) {
-        //   payInfo.price = obj.totalPrice.price.text
-        // }
-        // if('addresses' in obj.storeInfo) {
-        //   payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
-        // } 
-        //   var array = (Object.values(obj)[2])[0].items
+        if('totalPrice' in obj) {
+          payInfo.price = obj.totalPrice.price.text
+        }
+        if('addresses' in obj.storeInfo) {
+          payInfo.address = (Object.values(Object.values(obj)[0])[3])[0].text
+        } 
+          var array = (Object.values(obj)[2])[0].items
 
-        //   payInfo._itemName = []
-        //   payInfo._itemCount = []
-        //   payInfo._itemPrice = []
+          payInfo._itemName = []
+          payInfo._itemCount = []
+          payInfo._itemPrice = []
           
-        //   array.forEach(element => {
-        //       if('name' in element) {
-        //         console.log(payInfo._itemName)
-        //         payInfo._itemName.push(element.name.text);
-        //         console.log(payInfo._itemName)
-        //       } 
-        //       if('count' in element) {
-        //         console.log(payInfo._itemCount)
-        //         payInfo._itemCount.push(element.count.text); 
-        //         console.log(payInfo._itemCount)
-        //       } 
-        //       if('price' in element) {
-        //         console.log(payInfo._itemPrice)
-        //         payInfo._itemPrice.push(element.price.price.text);
-        //         console.log(payInfo._itemPrice)
-        //       }
-        //   });
-        //   console.log("success")
-        //   console.log(payInfo.address + "+" + payInfo.date + "+" + payInfo.name + "+" + payInfo.price + "+" + payInfo._itemCount + "+" + payInfo.item + "+" + payInfo.itemPrice)
-        //   callback()
+          array.forEach(element => {
+              if('name' in element) {
+                console.log(payInfo._itemName)
+                payInfo._itemName.push(element.name.text);
+                console.log(payInfo._itemName)
+              } 
+              if('count' in element) {
+                console.log(payInfo._itemCount)
+                payInfo._itemCount.push(element.count.text); 
+                console.log(payInfo._itemCount)
+              } 
+              if('price' in element) {
+                console.log(payInfo._itemPrice)
+                payInfo._itemPrice.push(element.price.price.text);
+                console.log(payInfo._itemPrice)
+              }
+          });
+          console.log("success")
+          console.log(payInfo.address + "+" + payInfo.date + "+" + payInfo.name + "+" + payInfo.price + "+" + payInfo._itemCount + "+" + payInfo.item + "+" + payInfo.itemPrice)
+          callback()
       }
     })
     .catch(e => {
