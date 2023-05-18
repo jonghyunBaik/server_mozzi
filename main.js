@@ -44,6 +44,63 @@ app.post(`/data`, async (req, res) => {
   }
 });
 
+app.post(`/data1`, async (req, res) => {
+  try {
+
+    const snapshot = await db.collection('mozzi').doc("id1").collection("pay").get();
+
+    const documents = [];
+
+    snapshot.forEach((doc) => {
+      documents.push(doc.data());
+    });
+
+    res.json(documents);
+
+  } catch (error) {
+    console.error('Error retrieving documents:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving documents.' });
+  }
+});
+
+app.post(`/data2`, async (req, res) => {
+  try {
+
+    const snapshot = await db.collection('mozzi').doc("id2").collection("pay").get();
+
+    const documents = [];
+
+    snapshot.forEach((doc) => {
+      documents.push(doc.data());
+    });
+
+    res.json(documents);
+
+  } catch (error) {
+    console.error('Error retrieving documents:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving documents.' });
+  }
+});
+
+app.post(`/data3`, async (req, res) => {
+  try {
+
+    const snapshot = await db.collection('mozzi').doc("id3").collection("pay").get();
+
+    const documents = [];
+
+    snapshot.forEach((doc) => {
+      documents.push(doc.data());
+    });
+
+    res.json(documents);
+
+  } catch (error) {
+    console.error('Error retrieving documents:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving documents.' });
+  }
+});
+
 
 // app.post('/login', (req, res) => {
 //   // const id = req.body.id;
@@ -67,20 +124,70 @@ app.post(`/data`, async (req, res) => {
 // });
 
 
-app.post('/add', async (req, res) => {
+app.post('/add1', async (req, res) => {
   try {
-    const { text1, text2, text3, text4, text5, text6, text7, text8 } = req.body;
+    console.log(req.body)
+    const { storeName, address, price, item, itemPrice, date, category, point, memo } = req.body;
 
     // Create a new document in the specified collection
-    await db.collection('mozzi').doc('hippo').collection('pay').add({
-      storeName : text1, // 가게 이름
-      address : text2, // 주소
-      price : text3, // 가격 
-      item : text4, // 항목
-      date : text5, // 날짜
-      category : text6, // 카테고리
-      point : text7, // 만족도
-      memo : text8 //메모
+    await db.collection('mozzi').doc('id1').collection('pay').add({
+      storeName : storeName, // 가게 이름
+      address : address, // 주소
+      price : price, // 가격 
+      item : item, // 항목 
+      itemPrice : itemPrice, // 항목이름
+      date : date, // 날짜
+      category : category, // 카테고리
+      point : point, // 만족도
+      memo : memo //메모
+    });
+
+    res.send('Data added successfully');
+  } catch (error) {
+    console.error('Error adding data:', error);
+    res.status(500).send('An error occurred while adding data.');
+  }
+});
+
+app.post('/add2', async (req, res) => {
+  try {
+    const { storeName, address, price, item, itemPrice, date, category, point, memo } = req.body;
+
+    // Create a new document in the specified collection
+    await db.collection('mozzi').doc('id2').collection('pay').add({
+      storeName : storeName, // 가게 이름
+      address : address, // 주소
+      price : price, // 가격 
+      item : item, // 항목 
+      itemPrice : itemPrice, // 항목이름
+      date : date, // 날짜
+      category : category, // 카테고리
+      point : point, // 만족도
+      memo : memo //메모
+    });
+
+    res.send('Data added successfully');
+  } catch (error) {
+    console.error('Error adding data:', error);
+    res.status(500).send('An error occurred while adding data.');
+  }
+});
+
+app.post('/add3', async (req, res) => {
+  try {
+    const { storeName, address, price, item, itemPrice, date, category, point, memo } = req.body;
+
+    // Create a new document in the specified collection
+    await db.collection('mozzi').doc('id3').collection('pay').add({
+      storeName : storeName, // 가게 이름
+      address : address, // 주소
+      price : price, // 가격 
+      item : item, // 항목 
+      itemPrice : itemPrice, // 항목이름
+      date : date, // 날짜
+      category : category, // 카테고리
+      point : point, // 만족도
+      memo : memo //메모
     });
 
     res.send('Data added successfully');
@@ -91,8 +198,6 @@ app.post('/add', async (req, res) => {
 });
 
 const API_KEY = process.env.API_KEY
-
-
 
 //getter setter 문제 해결 필요
 class PayInfo {
