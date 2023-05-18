@@ -352,6 +352,7 @@ async function requestWithFile (filename, callback) {
         if('paymentInfo' in obj) {
           payInfo.date = obj.paymentInfo.date.formatted.year + "-" + obj.paymentInfo.date.formatted.month + "-" + obj.paymentInfo.date.formatted.day
           if('time' in obj.paymentInfo) {
+            console.log("time" + obj.paymentInfo.time.text)
             payInfo.time = obj.paymentInfo.time.formatted.hour + " : " + obj.paymentInfo.time.formatted.minute + " : " + obj.paymentInfo.time.formatted.second
           }
         }
@@ -367,26 +368,21 @@ async function requestWithFile (filename, callback) {
         payInfo._itemCount = []
         payInfo._itemPrice = []
 
-        if('items' in obj.subResults[0]) {
+        if(obj.subResults.length > 0) {
           const subResults = obj.subResults[0].items
           
           subResults.forEach(element => {
             if('name' in element) {
-              console.log(payInfo._itemName)
               payInfo._itemName.push(element.name.text);
-              console.log(payInfo._itemName)
             } 
             if('count' in element) {
-              console.log(payInfo._itemCount)
               payInfo._itemCount.push(element.count.text); 
-              console.log(payInfo._itemCount)
             } 
             if('price' in element) {
-              console.log(payInfo._itemPrice)
               payInfo._itemPrice.push(element.price.price.text);
-              console.log(payInfo._itemPrice)
             }
-          });
+          }
+          );
         }
         console.log("success")
         callback()
@@ -397,3 +393,15 @@ async function requestWithFile (filename, callback) {
     })
 }
 
+requestWithFile('KakaoTalk_Photo_2023-05-18-20-26-26.jpeg', function() {
+console.log(
+  payInfo.name +
+  payInfo.price +
+  payInfo.date +
+  payInfo.address +
+  payInfo._itemName + 
+  payInfo._itemCount +
+  payInfo._itemPrice +
+  payInfo.time
+  )
+})
