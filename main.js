@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 
 // Initialize Firebase Admin SDK
 const serviceAccount = require('./firebase_key.json');
+const { equal } = require('assert');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -24,6 +25,209 @@ const db = admin.firestore();
 
 app.use(bodyParser.json());
 
+// get reward user1
+app.get('/reward1', async (req, res) => {
+  try {
+    const snapshot = await db.collection('mozzi').doc('id1').collection('pay').get();
+    var st1 = 0;
+    var st2 = 0;
+    var st3 = 0;
+    var st4 = 0;
+    var st5 = 0;
+    var st6 = 0;
+    const documents = [];
+    
+    var {stamp1, stamp2, stamp3, stamp4, stamp5, stamp6} = {stamp1 : false, stamp2 : false, stamp3 : false, stamp4 : false, stamp5 : false, stamp6 : false}
+    
+    snapshot.forEach((doc) => {
+      st1++;
+      if(doc.data().category == "식사") {
+        st2++
+      }
+      if(!documents.includes(doc.data().address)) {
+        st3++
+      } else {
+        console.log("equal");
+      }
+      documents.push(doc.data().address)
+      if(doc.data().category == "여가") {
+        st4++
+      }
+      if(doc.data().category == "쇼핑") {
+        st5++
+      }
+      if(doc.data().category == "카페") {
+        st6++
+      }
+    })
+
+    if(st1 >= 2) {
+      stamp1 = true
+    }
+    if(st2 >= 2) {
+      stamp2 = true
+    }
+    if(st3 >= 2) {
+      stamp3 = true
+    }
+    if(st4 >= 2) {
+      stamp4 = true
+    }
+    if(st5 >= 2) {
+      stamp5 = true
+    }
+    if(st6 >= 2) {
+      stamp6 = true
+    }
+
+    console.log(st3)
+    res.json({
+      stamp1,
+      stamp2,
+      stamp3,
+      stamp4,
+      stamp5,
+      stamp6
+    })
+  } catch(error) {
+    console.error('Error retrieving documents:', error);
+  }
+})
+
+app.get('/reward2', async (req, res) => {
+  try {
+    const snapshot = await db.collection('mozzi').doc('id2').collection('pay').get();
+    var st1 = 0;
+    var st2 = 0;
+    var st3 = 0;
+    var st4 = 0;
+    var st5 = 0;
+    var st6 = 0;
+    const documents = [];
+    
+    var {stamp1, stamp2, stamp3, stamp4, stamp5, stamp6} = {stamp1 : false, stamp2 : false, stamp3 : false, stamp4 : false, stamp5 : false, stamp6 : false}
+    
+    snapshot.forEach((doc) => {
+      st1++;
+      if(doc.data().category == "식사") {
+        st2++
+      }
+      if(!documents.includes(doc.data().address)) {
+        st3++
+      } else {
+        console.log("equal");
+      }
+      documents.push(doc.data().address)
+      if(doc.data().category == "여가") {
+        st4++
+      }
+      if(doc.data().category == "쇼핑") {
+        st5++
+      }
+      if(doc.data().category == "카페") {
+        st6++
+      }
+    })
+
+    if(st1 >= 2) {
+      stamp1 = true
+    }
+    if(st2 >= 2) {
+      stamp2 = true
+    }
+    if(st3 >= 2) {
+      stamp3 = true
+    }
+    if(st4 >= 2) {
+      stamp4 = true
+    }
+    if(st5 >= 2) {
+      stamp5 = true
+    }
+    if(st6 >= 2) {
+      stamp6 = true
+    }
+
+    console.log(st3)
+    res.json({
+      stamp1,
+      stamp2,
+      stamp3,
+      stamp4,
+      stamp5,
+      stamp6
+    })
+  } catch(error) {
+    console.error('Error retrieving documents:', error);
+  }
+})
+app.get('/reward3', async (req, res) => {
+  try {
+    const snapshot = await db.collection('mozzi').doc('id3').collection('pay').get();
+    var st1 = 0;
+    var st2 = 0;
+    var st3 = 0;
+    var st4 = 0;
+    var st5 = 0;
+    var st6 = 0;
+    const documents = [];
+    
+    var {stamp1, stamp2, stamp3, stamp4, stamp5, stamp6} = {stamp1 : false, stamp2 : false, stamp3 : false, stamp4 : false, stamp5 : false, stamp6 : false}
+    
+    snapshot.forEach((doc) => {
+      st1++;
+      if(doc.data().category == "식사") {
+        st2++
+      }
+      if(!documents.includes(doc.data().address)) {
+        st3++
+      } else {
+        console.log("equal");
+      }
+      documents.push(doc.data().address)
+      if(doc.data().category == "여가") {
+        st4++
+      }
+      if(doc.data().category == "쇼핑") {
+        st5++
+      }
+      if(doc.data().category == "카페") {
+        st6++
+      }
+    })
+
+    if(st1 >= 2) {
+      stamp1 = true
+    }
+    if(st2 >= 2) {
+      stamp2 = true
+    }
+    if(st3 >= 2) {
+      stamp3 = true
+    }
+    if(st4 >= 2) {
+      stamp4 = true
+    }
+    if(st5 >= 2) {
+      stamp5 = true
+    }
+    if(st6 >= 2) {
+      stamp6 = true
+    }
+
+    console.log(st3)
+    res.json({
+      stamp1,
+      stamp2,
+      stamp3,
+      stamp4,
+      stamp5,
+      stamp6
+    })
+  } catch(error) {
+    console.error('Error retrieving documents:', error);
+  }
+})
 // Define a route for '/data'
 app.post(`/data`, async (req, res) => {
   try {
@@ -352,7 +556,6 @@ async function requestWithFile (filename, callback) {
         if('paymentInfo' in obj) {
           payInfo.date = obj.paymentInfo.date.formatted.year + "-" + obj.paymentInfo.date.formatted.month + "-" + obj.paymentInfo.date.formatted.day
           if('time' in obj.paymentInfo) {
-            console.log("time" + obj.paymentInfo.time.text)
             payInfo.time = obj.paymentInfo.time.formatted.hour + " : " + obj.paymentInfo.time.formatted.minute + " : " + obj.paymentInfo.time.formatted.second
           }
         }
