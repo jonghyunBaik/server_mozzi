@@ -11,6 +11,9 @@ const admin = require('firebase-admin');
 var firestore = require("firebase-admin/firestore");
 const bodyParser = require('body-parser');
 
+
+const API_KEY = process.env.API_KEY
+
 // Initialize Firebase Admin SDK
 const serviceAccount = require('./firebase_key.json');
 const { equal } = require('assert');
@@ -215,7 +218,6 @@ app.get('/reward3', async (req, res) => {
       stamp6 = true
     }
 
-    console.log(st3)
     res.json({
       stamp1,
       stamp2,
@@ -401,7 +403,6 @@ app.post('/add3', async (req, res) => {
   }
 });
 
-const API_KEY = process.env.API_KEY
 
 //getter setter 문제 해결 필요
 class PayInfo {
@@ -577,15 +578,14 @@ async function requestWithFile (filename, callback) {
           subResults.forEach(element => {
             if('name' in element) {
               payInfo._itemName.push(element.name.text);
-            } 
+            }
             if('count' in element) {
               payInfo._itemCount.push(element.count.text); 
-            } 
+            }
             if('price' in element) {
               payInfo._itemPrice.push(element.price.price.text);
             }
-          }
-          );
+          });
         }
         console.log("success")
         callback()
