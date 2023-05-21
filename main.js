@@ -14,12 +14,18 @@ const bodyParser = require('body-parser');
 
 const API_KEY = process.env.API_KEY
 
+
 // Initialize Firebase Admin SDK
-const serviceAccount = require('./firebase_key.json');
+// const serviceAccount = require(Firebase_key);
 const { equal } = require('assert');
+const { profileEnd } = require('console');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_project_id,
+    clientEmail: process.env.FIREBASE_client_email,
+    privateKey: process.env.FIREBASE_project_key?.replace(/\\n/g, '\n'),
+  }),
   databaseURL: "https://fir-node-60d01-default-rtdb.firebaseio.com"
 });
 
