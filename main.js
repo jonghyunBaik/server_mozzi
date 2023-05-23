@@ -263,30 +263,6 @@ app.get(`/image/:imagePath`, async (req, res) => {
 });
 
 
-
-// Define a route for '/data'
-app.get(`/data`, async (req, res) => {
-  try {
-    // console.log(req.body.id);
-
-    const snapshot = await db.collection('mozzi').doc("id1").collection("pay").get();
-    
-
-    const documents = [];
-
-    snapshot.forEach((doc) => {
-        console.log(doc.data())
-        documents.push(doc.data());
-    });
-
-    res.json(documents);
-  } catch (error) {
-    console.error('Error retrieving documents:', error);
-    res.status(500).json({ error: 'An error occurred while retrieving documents.' });
-  }
-});
-
-
 app.get(`/data1`, async (req, res) => {
   try {
 
@@ -345,24 +321,33 @@ app.get(`/data3`, async (req, res) => {
   }
 });
 
-
 app.post('/add1', async (req, res) => {
   try {
-    console.log(req.body)
     const { storeName, address, price, item, itemPrice, date, category, point, memo } = req.body;
 
-    // Create a new document in the specified collection
-    await db.collection('mozzi').doc('id1').collection('pay').add({
-      storeName : storeName, // 가게 이름
-      address : address, // 주소
-      price : price, // 가격 
-      item : item, // 항목 
-      itemPrice : itemPrice, // 항목이름
-      date : date, // 날짜
-      category : category, // 카테고리
-      point : point, // 만족도
-      memo : memo //메모
-    });
+      // 컬렉션 내 문서 수 계산
+      const collectionRef = db.collection('mozzi').doc('id1').collection('pay');
+      const collectionSnapshot = await collectionRef.get();
+      const documentCount = collectionSnapshot.size;
+  
+      // 새 문서 이름 생성
+      const documentName = `${documentCount + 1}`;
+  
+      console.log(documentName)
+      // 데이터를 새 문서에 저장
+      await collectionRef.doc(documentName).set({
+          storeName : storeName, // 가게 이름
+          address : address, // 주소
+          price : price, // 가격 
+          item : item, // 항목 
+          itemPrice : itemPrice, // 항목이름
+          date : date, // 날짜
+          category : category, // 카테고리
+          point : point, // 만족도
+          memo : memo //메모
+        });
+  
+      console.log('데이터가 성공적으로 저장되었습니다.');
 
     res.send('Data added successfully');
   } catch (error) {
@@ -370,23 +355,36 @@ app.post('/add1', async (req, res) => {
     res.status(500).send('An error occurred while adding data.');
   }
 });
+
+
 
 app.post('/add2', async (req, res) => {
   try {
     const { storeName, address, price, item, itemPrice, date, category, point, memo } = req.body;
 
-    // Create a new document in the specified collection
-    await db.collection('mozzi').doc('id2').collection('pay').add({
-      storeName : storeName, // 가게 이름
-      address : address, // 주소
-      price : price, // 가격 
-      item : item, // 항목 
-      itemPrice : itemPrice, // 항목이름
-      date : date, // 날짜
-      category : category, // 카테고리
-      point : point, // 만족도
-      memo : memo //메모
-    });
+      // 컬렉션 내 문서 수 계산
+      const collectionRef = db.collection('mozzi').doc('id2').collection('pay');
+      const collectionSnapshot = await collectionRef.get();
+      const documentCount = collectionSnapshot.size;
+  
+      // 새 문서 이름 생성
+      const documentName = `${documentCount + 1}`;
+  
+      console.log(documentName)
+      // 데이터를 새 문서에 저장
+      await collectionRef.doc(documentName).set({
+          storeName : storeName, // 가게 이름
+          address : address, // 주소
+          price : price, // 가격 
+          item : item, // 항목 
+          itemPrice : itemPrice, // 항목이름
+          date : date, // 날짜
+          category : category, // 카테고리
+          point : point, // 만족도
+          memo : memo //메모
+        });
+  
+      console.log('데이터가 성공적으로 저장되었습니다.');
 
     res.send('Data added successfully');
   } catch (error) {
@@ -394,23 +392,36 @@ app.post('/add2', async (req, res) => {
     res.status(500).send('An error occurred while adding data.');
   }
 });
+
+
 
 app.post('/add3', async (req, res) => {
   try {
     const { storeName, address, price, item, itemPrice, date, category, point, memo } = req.body;
 
-    // Create a new document in the specified collection
-    await db.collection('mozzi').doc('id3').collection('pay').add({
-      storeName : storeName, // 가게 이름
-      address : address, // 주소
-      price : price, // 가격 
-      item : item, // 항목 
-      itemPrice : itemPrice, // 항목이름
-      date : date, // 날짜
-      category : category, // 카테고리
-      point : point, // 만족도
-      memo : memo //메모
-    });
+      // 컬렉션 내 문서 수 계산
+      const collectionRef = db.collection('mozzi').doc('id3').collection('pay');
+      const collectionSnapshot = await collectionRef.get();
+      const documentCount = collectionSnapshot.size;
+  
+      // 새 문서 이름 생성
+      const documentName = `${documentCount + 1}`;
+  
+      console.log(documentName)
+      // 데이터를 새 문서에 저장
+      await collectionRef.doc(documentName).set({
+          storeName : storeName, // 가게 이름
+          address : address, // 주소
+          price : price, // 가격 
+          item : item, // 항목 
+          itemPrice : itemPrice, // 항목이름
+          date : date, // 날짜
+          category : category, // 카테고리
+          point : point, // 만족도
+          memo : memo //메모
+        });
+  
+      console.log('데이터가 성공적으로 저장되었습니다.');
 
     res.send('Data added successfully');
   } catch (error) {
@@ -418,6 +429,8 @@ app.post('/add3', async (req, res) => {
     res.status(500).send('An error occurred while adding data.');
   }
 });
+
+
 
 
 //getter setter 문제 해결 필요
@@ -478,11 +491,18 @@ app.get('/', (req,res) => {
   res.send("hello world");
 })
 
-
 app.post('/imageUpload1', upload.single("image"), async (req, res) => {
   try {
     const filename = req.file.filename;
 
+    // Create a new document in the specified collection
+    const collectionRef = db.collection('mozzi').doc('id1').collection('pay');
+    const collectionSnapshot = await collectionRef.get();
+    const documentCount = collectionSnapshot.size;
+
+    // 새 문서 이름 생성
+    const documentName = `${documentCount}`;
+
     bucket.upload(`uploads/${filename}`, {
       destination: `pay/${filename}`,
       metadata: {
@@ -490,49 +510,29 @@ app.post('/imageUpload1', upload.single("image"), async (req, res) => {
         // Add additional metadata properties as needed
       },
     }).then(() => {
-      console.log('Image uploaded successfully to Firebase Storage.');
-      res.send("data add success")
+      
+      res.send('Data added successfully');
+      
     })
-    .catch((error) => {
-      console.error('Error uploading image to Firebase Storage:', error);
-    });
-
-    const collectionRef = db.collection('mozzi').doc("id1").collection('pay');
-    collectionRef
-    .orderBy('createdAt', 'desc') // createdAt 필드를 기준으로 내림차순으로 정렬\
-    
-    collectionRef.get()
-    .then((querySnapshot) => {
-      if (querySnapshot.size === 0) {
-        console.log('No documents found in the collection.');
-        return;
-      }
-
-      const latestDocument = querySnapshot.docs[(querySnapshot.size-1)];
-      const documentRef = collectionRef.doc(latestDocument.id);
-
-      // 문서에 추가 데이터 추가
-      documentRef
-        .update({imagePath : filename})
-        .then(() => {
-          console.log('Additional data added to the latest document successfully.');
-        })
-        .catch((error) => {
-          console.error('Error adding additional data to the document:', error);
-        });
+    await collectionRef.doc(documentName).update({
+      imagePath : filename
     })
-    .catch((error) => {
-      console.error('Error getting documents:', error);
-    });
   } catch(error) {
     console.log(error);
   }
 })
-
 app.post('/imageUpload2', upload.single("image"), async (req, res) => {
   try {
     const filename = req.file.filename;
 
+    // Create a new document in the specified collection
+    const collectionRef = db.collection('mozzi').doc('id2').collection('pay');
+    const collectionSnapshot = await collectionRef.get();
+    const documentCount = collectionSnapshot.size;
+
+    // 새 문서 이름 생성
+    const documentName = `${documentCount}`;
+
     bucket.upload(`uploads/${filename}`, {
       destination: `pay/${filename}`,
       metadata: {
@@ -540,49 +540,28 @@ app.post('/imageUpload2', upload.single("image"), async (req, res) => {
         // Add additional metadata properties as needed
       },
     }).then(() => {
-      console.log('Image uploaded successfully to Firebase Storage.');
-      res.send("data add success")
+      
+      res.send('Data added successfully');
+      
     })
-    .catch((error) => {
-      console.error('Error uploading image to Firebase Storage:', error);
-    });
-
-    const collectionRef = db.collection('mozzi').doc("id2").collection('pay');
-    collectionRef
-    .orderBy('createdAt', 'desc') // createdAt 필드를 기준으로 내림차순으로 정렬\
-    
-    collectionRef.get()
-    .then((querySnapshot) => {
-      if (querySnapshot.size === 0) {
-        console.log('No documents found in the collection.');
-        return;
-      }
-
-      const latestDocument = querySnapshot.docs[(querySnapshot.size-1)];
-      const documentRef = collectionRef.doc(latestDocument.id);
-
-      // 문서에 추가 데이터 추가
-      documentRef
-        .update({imagePath : filename})
-        .then(() => {
-          console.log('Additional data added to the latest document successfully.');
-        })
-        .catch((error) => {
-          console.error('Error adding additional data to the document:', error);
-        });
+    await collectionRef.doc(documentName).update({
+      imagePath : filename
     })
-    .catch((error) => {
-      console.error('Error getting documents:', error);
-    });
   } catch(error) {
     console.log(error);
   }
 })
-
-
 app.post('/imageUpload3', upload.single("image"), async (req, res) => {
   try {
     const filename = req.file.filename;
+
+    // Create a new document in the specified collection
+    const collectionRef = db.collection('mozzi').doc('id3').collection('pay');
+    const collectionSnapshot = await collectionRef.get();
+    const documentCount = collectionSnapshot.size;
+
+    // 새 문서 이름 생성
+    const documentName = `${documentCount}`;
 
     bucket.upload(`uploads/${filename}`, {
       destination: `pay/${filename}`,
@@ -591,40 +570,13 @@ app.post('/imageUpload3', upload.single("image"), async (req, res) => {
         // Add additional metadata properties as needed
       },
     }).then(() => {
-      console.log('Image uploaded successfully to Firebase Storage.');
-      res.send("data add success")
+      
+      res.send('Data added successfully');
+      
     })
-    .catch((error) => {
-      console.error('Error uploading image to Firebase Storage:', error);
-    });
-
-    const collectionRef = db.collection('mozzi').doc("id3").collection('pay');
-    collectionRef
-    .orderBy('createdAt', 'desc') // createdAt 필드를 기준으로 내림차순으로 정렬\
-    
-    collectionRef.get()
-    .then((querySnapshot) => {
-      if (querySnapshot.size === 0) {
-        console.log('No documents found in the collection.');
-        return;
-      }
-
-      const latestDocument = querySnapshot.docs[(querySnapshot.size-1)];
-      const documentRef = collectionRef.doc(latestDocument.id);
-
-      // 문서에 추가 데이터 추가
-      documentRef
-        .update({imagePath : filename})
-        .then(() => {
-          console.log('Additional data added to the latest document successfully.');
-        })
-        .catch((error) => {
-          console.error('Error adding additional data to the document:', error);
-        });
+    await collectionRef.doc(documentName).update({
+      imagePath : filename
     })
-    .catch((error) => {
-      console.error('Error getting documents:', error);
-    });
   } catch(error) {
     console.log(error);
   }
