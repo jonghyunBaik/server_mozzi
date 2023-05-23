@@ -252,7 +252,7 @@ app.get(`/image/:imagePath`, async (req, res) => {
 
       const localFilePath = `uploads/${imagePath}`; // 저장할 로컬 경로
 
-      await bucket.file(`id1/pay/${imagePath}`).download({ destination: localFilePath });
+      await bucket.file(`pay/${imagePath}`).download({ destination: localFilePath });
     
       res.sendFile(localFilePath , {root:__dirname});
   } catch (error) {
@@ -261,6 +261,7 @@ app.get(`/image/:imagePath`, async (req, res) => {
   }
 
 });
+
 
 
 // Define a route for '/data'
