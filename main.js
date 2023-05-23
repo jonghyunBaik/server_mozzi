@@ -9,7 +9,9 @@ const env = require("dotenv");
 env.config();
 const admin = require('firebase-admin');
 var firestore = require("firebase-admin/firestore");
+var firebase_storage = require('firebase-admin/storage');
 const bodyParser = require('body-parser');
+const path = require('path')
 
 
 const API_KEY = process.env.API_KEY
@@ -17,8 +19,6 @@ const API_KEY = process.env.API_KEY
 
 // Initialize Firebase Admin SDK
 // const serviceAccount = require(Firebase_key);
-const { equal } = require('assert');
-const { profileEnd } = require('console');
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -26,7 +26,8 @@ admin.initializeApp({
     clientEmail: process.env.FIREBASE_client_email,
     privateKey: process.env.FIREBASE_project_key?.replace(/\\n/g, '\n'),
   }),
-  databaseURL: "https://fir-node-60d01-default-rtdb.firebaseio.com"
+  databaseURL: "https://fir-node-60d01-default-rtdb.firebaseio.com",
+  storageBucket: "gs://fir-node-60d01.appspot.com"
 });
 
 // Get a reference to the Firestore database
@@ -170,6 +171,7 @@ app.get('/reward2', async (req, res) => {
     console.error('Error retrieving documents:', error);
   }
 })
+
 app.get('/reward3', async (req, res) => {
   try {
     const snapshot = await db.collection('mozzi').doc('id3').collection('pay').get();
@@ -236,17 +238,51 @@ app.get('/reward3', async (req, res) => {
     console.error('Error retrieving documents:', error);
   }
 })
+
+const bucket = admin.storage().bucket("gs://fir-node-60d01.appspot.com");
+
+/*
+여기 에러 해결 필요
+api url 설정을 통해 서로다른 이미지를 출력하려 했지만 실패함 그렇다면??
+
+배열로 int 를 추가하면서 설정하면 되려나? 그것또한 애매한듯 내일 해결 필요
+
+*/
+
+app.get(`/image/:imagePath`, async (req, res) => {
+  // Retrieve the image from Firebase Storage
+  try {
+    
+    const imagePath = req.params.imagePath;
+
+    // 이미지를 다운로드하여 저장합니다.
+
+      const localFilePath = `uploads/${imagePath}`; // 저장할 로컬 경로
+
+      await bucket.file(`id1/pay/${imagePath}`).download({ destination: imagePath });
+    
+      res.sendFile(localFilePath , {root:__dirname});
+  } catch (error) {
+    console.error('Error retrieving and sending images:', error);
+    res.sendStatus(500);
+  }
+
+});
+
+
 // Define a route for '/data'
-app.post(`/data`, async (req, res) => {
+app.get(`/data`, async (req, res) => {
   try {
     // console.log(req.body.id);
 
-    const snapshot = await db.collection('mozzi').doc(req.body.id).collection("pay").get();
+    const snapshot = await db.collection('mozzi').doc("id1").collection("pay").get();
+    
 
     const documents = [];
 
     snapshot.forEach((doc) => {
-      documents.push(doc.data());
+        console.log(doc.data())
+        documents.push(doc.data());
     });
 
     res.json(documents);
@@ -256,10 +292,12 @@ app.post(`/data`, async (req, res) => {
   }
 });
 
+
 app.get(`/data1`, async (req, res) => {
   try {
 
     const snapshot = await db.collection('mozzi').doc("id1").collection("pay").get();
+
 
     const documents = [];
 
@@ -312,28 +350,6 @@ app.get(`/data3`, async (req, res) => {
     res.status(500).json({ error: 'An error occurred while retrieving documents.' });
   }
 });
-
-
-// app.post('/login', (req, res) => {
-//   // const id = req.body.id;
-//   console.log(req.body);
-
-//   const documents = [];
-
-//   // Implement your login logic here, such as verifying the ID and password
-
-//   // Assuming the login is successful, retrieve data from Firebase
-//   const db = admin.firestore();
-//   const snapshot = db.collection('mozzi').doc(`hippo`).collection("pay").get();
-
-//   snapshot.forEach((doc) => {
-//       documents.push(doc.data());
-//     })
-//     .catch((error) => {
-//       res.status(500).json({ error: 'Error retrieving user data' });
-//     });
-//     res.json(documents);
-// });
 
 
 app.post('/add1', async (req, res) => {
@@ -467,6 +483,7 @@ const upload = multer({ storage: storage});
 app.get('/', (req,res) => {
   res.send("hello world");
 })
+
 
 // 이미지 업로드를 처리하는 라우트
 app.post("/upload", upload.single("image"), async (req, res) => {
