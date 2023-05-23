@@ -241,13 +241,6 @@ app.get('/reward3', async (req, res) => {
 
 const bucket = admin.storage().bucket("gs://fir-node-60d01.appspot.com");
 
-/*
-여기 에러 해결 필요
-api url 설정을 통해 서로다른 이미지를 출력하려 했지만 실패함 그렇다면??
-
-배열로 int 를 추가하면서 설정하면 되려나? 그것또한 애매한듯 내일 해결 필요
-
-*/
 
 app.get(`/image/:imagePath`, async (req, res) => {
   // Retrieve the image from Firebase Storage
@@ -259,7 +252,7 @@ app.get(`/image/:imagePath`, async (req, res) => {
 
       const localFilePath = `uploads/${imagePath}`; // 저장할 로컬 경로
 
-      await bucket.file(`id1/pay/${imagePath}`).download({ destination: imagePath });
+      await bucket.file(`id1/pay/${imagePath}`).download({ destination: localFilePath });
     
       res.sendFile(localFilePath , {root:__dirname});
   } catch (error) {
