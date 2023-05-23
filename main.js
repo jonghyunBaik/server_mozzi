@@ -479,6 +479,157 @@ app.get('/', (req,res) => {
 })
 
 
+app.post('/imageUpload1', upload.single("image"), async (req, res) => {
+  try {
+    const filename = req.file.filename;
+
+    bucket.upload(`uploads/${filename}`, {
+      destination: `pay/${filename}`,
+      metadata: {
+        contentType: 'image/jpeg',
+        // Add additional metadata properties as needed
+      },
+    }).then(() => {
+      console.log('Image uploaded successfully to Firebase Storage.');
+      res.send("data add success")
+    })
+    .catch((error) => {
+      console.error('Error uploading image to Firebase Storage:', error);
+    });
+
+    const collectionRef = db.collection('mozzi').doc("id1").collection('pay');
+    collectionRef
+    .orderBy('createdAt', 'desc') // createdAt 필드를 기준으로 내림차순으로 정렬\
+    
+    collectionRef.get()
+    .then((querySnapshot) => {
+      if (querySnapshot.size === 0) {
+        console.log('No documents found in the collection.');
+        return;
+      }
+
+      const latestDocument = querySnapshot.docs[(querySnapshot.size-1)];
+      const documentRef = collectionRef.doc(latestDocument.id);
+
+      // 문서에 추가 데이터 추가
+      documentRef
+        .update({imagePath : filename})
+        .then(() => {
+          console.log('Additional data added to the latest document successfully.');
+        })
+        .catch((error) => {
+          console.error('Error adding additional data to the document:', error);
+        });
+    })
+    .catch((error) => {
+      console.error('Error getting documents:', error);
+    });
+  } catch(error) {
+    console.log(error);
+  }
+})
+
+app.post('/imageUpload2', upload.single("image"), async (req, res) => {
+  try {
+    const filename = req.file.filename;
+
+    bucket.upload(`uploads/${filename}`, {
+      destination: `pay/${filename}`,
+      metadata: {
+        contentType: 'image/jpeg',
+        // Add additional metadata properties as needed
+      },
+    }).then(() => {
+      console.log('Image uploaded successfully to Firebase Storage.');
+      res.send("data add success")
+    })
+    .catch((error) => {
+      console.error('Error uploading image to Firebase Storage:', error);
+    });
+
+    const collectionRef = db.collection('mozzi').doc("id2").collection('pay');
+    collectionRef
+    .orderBy('createdAt', 'desc') // createdAt 필드를 기준으로 내림차순으로 정렬\
+    
+    collectionRef.get()
+    .then((querySnapshot) => {
+      if (querySnapshot.size === 0) {
+        console.log('No documents found in the collection.');
+        return;
+      }
+
+      const latestDocument = querySnapshot.docs[(querySnapshot.size-1)];
+      const documentRef = collectionRef.doc(latestDocument.id);
+
+      // 문서에 추가 데이터 추가
+      documentRef
+        .update({imagePath : filename})
+        .then(() => {
+          console.log('Additional data added to the latest document successfully.');
+        })
+        .catch((error) => {
+          console.error('Error adding additional data to the document:', error);
+        });
+    })
+    .catch((error) => {
+      console.error('Error getting documents:', error);
+    });
+  } catch(error) {
+    console.log(error);
+  }
+})
+
+
+app.post('/imageUpload3', upload.single("image"), async (req, res) => {
+  try {
+    const filename = req.file.filename;
+
+    bucket.upload(`uploads/${filename}`, {
+      destination: `pay/${filename}`,
+      metadata: {
+        contentType: 'image/jpeg',
+        // Add additional metadata properties as needed
+      },
+    }).then(() => {
+      console.log('Image uploaded successfully to Firebase Storage.');
+      res.send("data add success")
+    })
+    .catch((error) => {
+      console.error('Error uploading image to Firebase Storage:', error);
+    });
+
+    const collectionRef = db.collection('mozzi').doc("id3").collection('pay');
+    collectionRef
+    .orderBy('createdAt', 'desc') // createdAt 필드를 기준으로 내림차순으로 정렬\
+    
+    collectionRef.get()
+    .then((querySnapshot) => {
+      if (querySnapshot.size === 0) {
+        console.log('No documents found in the collection.');
+        return;
+      }
+
+      const latestDocument = querySnapshot.docs[(querySnapshot.size-1)];
+      const documentRef = collectionRef.doc(latestDocument.id);
+
+      // 문서에 추가 데이터 추가
+      documentRef
+        .update({imagePath : filename})
+        .then(() => {
+          console.log('Additional data added to the latest document successfully.');
+        })
+        .catch((error) => {
+          console.error('Error adding additional data to the document:', error);
+        });
+    })
+    .catch((error) => {
+      console.error('Error getting documents:', error);
+    });
+  } catch(error) {
+    console.log(error);
+  }
+})
+
 // 이미지 업로드를 처리하는 라우트
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
@@ -486,7 +637,6 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     const { path, filename } = req.file;
     // 클라이언트에게 응답 보내기
 
-  // console.log("filename " , typeof(filename))
     await requestWithFile(filename, function() {
       const address = payInfo.address;
       const price = payInfo.price;
@@ -494,17 +644,21 @@ app.post("/upload", upload.single("image"), async (req, res) => {
       const name = payInfo.name;
       const time = payInfo.time;
       const itemName = []
+
       payInfo._itemName.forEach(element => {
         itemName.push(element)
       });
+
       const itemCount = []
       payInfo._itemCount.forEach(element => {
         itemCount.push(element)
       });
+
       const itemPrice = []
       payInfo._itemPrice.forEach(element => {
         itemPrice.push(element)
       });
+
       res.json({
           name,
           price,
