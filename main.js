@@ -524,7 +524,7 @@ app.post('/imageUpload1', upload.single("image"), async (req, res) => {
 app.post('/imageUpload2', upload.single("image"), async (req, res) => {
   try {
     console.log("호출됨")
-    const filename = req.file.filename;
+    const {path, filenam} = req.file;
 
     // Create a new document in the specified collection
     const collectionRef = db.collection('mozzi').doc('id2').collection('pay');
